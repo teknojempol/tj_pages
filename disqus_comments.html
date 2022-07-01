@@ -1,56 +1,68 @@
-<!--
--------------------------- Please do not remove this following CREDIT --------------------------
-disqus comment for AMP Blogspot - blogger.com, revised and optimized by Klikdesainweb
-homepage: https://www.klikdesainweb.com
-hubungi Jasa Website:+62 895-2637-5787.
-Address: Bukit kemuning, Lampung Utara, Lampung 34556 - Indonesia
-Jasa Pembuatan Website
--------------------------- Please do not remove this following CREDIT --------------------------
--->
-
 <div id="disqus_thread"></div>
+<style>
+  #disqus_thread>iframe[src*="ads-iframe"],#disqus_thread>iframe[sandbox]{display:none!important}
+</style>
 <script>
-var parentUrl = document.referrer;
-var disqus_config = function () {
-this.page.url = parentUrl;
-this.page.identifier = parentUrl;
-};
-//Github Default
-(function () {
-var d = document, s = d.createElement('script');
-s.src = '//teknologi-jempolan.disqus.com/embed.js';
-s.setAttribute('data-timestamp', +new Date());
-(d.head || d.body).appendChild(s);
-})();
-(function () {
-function checkSizeChange() {
-var viewportHeight = window.innerHeight;
-var contentHeight = document.getElementById('disqus_thread').clientHeight;
-if (viewportHeight !== contentHeight && contentHeight > 100) {
-window.parent.postMessage({
-sentinel: 'amp',
-type: 'embed-size',
-height: contentHeight
-}, '*')
+  window.addEventListener('message', receiveMessage, false);
+
+  function receiveMessage(event) {
+    if (event.data) {
+      var msg;
+      try {
+        msg = JSON.parse(event.data);
+      } catch (err) {}
+      if (!msg)
+        return false;
+      if (msg.name === 'resize') {
+        window.parent.postMessage({
+          sentinel: 'amp',
+          type: 'embed-size',
+          height: msg.data.height
+        }, '*');
+      }
+    }
+  }
+
+  function getQueryVariable(variable) {
+    var query = window.location.search.substring(1);
+    var vars = query.split('&');
+    for (var i = 0; i < vars.length; i++) {
+      var pair = vars[i].split('=');
+      if (pair[0] == variable) {
+        return pair[1];
+      }
+    }
+    return (false);
+  }
+  
+    var css = '#disqus_thread {font-family:' + getQueryVariable('fontBodyFamily') + '} a {color:#' + getQueryVariable('fontLinkColor') + '}',
+    head = document.head || document.getElementsByTagName('head')[0],
+    style = document.createElement('style');
+style.type = 'text/css';
+if (style.styleSheet){
+  style.styleSheet.cssText = css;
+} else {
+  style.appendChild(document.createTextNode(css));
 }
-}
-var mutationObserverAvailable = typeof window.MutationObserver === 'function';
-function bindObserver() {
-var frame = document.getElementsByTagName('iframe')[0];
-if (frame === null || frame === undefined) {
-setTimeout(bindObserver, 200);
-return;
-}
-checkSizeChange();
-var resizeObserver = new MutationObserver(checkSizeChange);
-resizeObserver.observe(frame, {
-attributes: true,
-attributeFilter: ['style']
-});
-}
-if (mutationObserverAvailable) {
-bindObserver();
-}
-setInterval(checkSizeChange, mutationObserverAvailable ? 5000 : 500);
-})();
+head.appendChild(style);
+
+    /**
+     *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+     *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+     */
+    var disqus_shortname = getQueryVariable('shortname');
+    var disqus_config = function () {
+        this.page.url = getQueryVariable('canonicalurl');
+        this.page.identifier = '';
+        this.page.title = getQueryVariable('title');
+    };
+    
+    (function() {  // REQUIRED CONFIGURATION VARIABLE: EDIT THE SHORTNAME BELOW
+        var d = document, s = d.createElement('script');
+        
+        s.src = '//'+disqus_shortname+'.disqus.com/embed.js';  // IMPORTANT: Replace EXAMPLE with your forum shortname!
+        
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
 </script>
