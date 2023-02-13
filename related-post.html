@@ -55,7 +55,7 @@ function getQueryVariable(variable) {
 <script>
 function related_results_labels(e){for(var t=0;t<e.feed.entry.length;t++){var l=e.feed.entry[t];relatedTitles[relatedTitlesNum]=l.title.$t;for(var r=0;r<l.link.length;r++)if("alternate"==l.link[r].rel){relatedUrls[relatedTitlesNum]=l.link[r].href,relatedTitlesNum++;break}}}function removeRelatedDuplicates(){for(var e=new Array(0),t=new Array(0),l=0;l<relatedUrls.length;l++)contains(e,relatedUrls[l])||(e.length+=1,e[e.length-1]=relatedUrls[l],t.length+=1,t[t.length-1]=relatedTitles[l]);relatedTitles=t,relatedUrls=e}function contains(e,t){for(var l=0;l<e.length;l++)if(e[l]==t)return!0;return!1}function printRelatedLabels(){var e=Math.floor((relatedTitles.length-1)*Math.random()),t=0;for(document.write("<ul>");t<relatedTitles.length&&getQueryVariable('jumlah')>t;)document.write('<li><a href="'+relatedUrls[e]+'" target="_blank">'+relatedTitles[e]+"</a></li>"),e<relatedTitles.length-1?e++:e=0,t++;document.write("</ul>"),document.write()}var relatedTitles=new Array,relatedTitlesNum=0,relatedUrls=new Array;
 </script>
-<h4>Baca juga:</h4>
+<h4>Baca juga artikel terkait lainnya :</h4>
 <script>
 var scriptJS = getQueryVariable('url') + "/feeds/posts/default/-/" + getQueryVariable('label') + "?alt=json-in-script&amp;callback=related_results_labels&amp;max-results=" + getQueryVariable('jumlah')
 document.write("<scr" + "ipt src="+scriptJS+"></scr" + "ipt>");
