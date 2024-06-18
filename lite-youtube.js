@@ -53,9 +53,9 @@ export class LiteYTEmbed extends HTMLElement {
             <style ${nonce}>
                 :host { contain: content; display: block; position: relative; width: 100%; padding-bottom: calc(100% / (16 / 9)); }
                 @media (max-width: 40em) { :host([short]) { padding-bottom: calc(100% / (9 / 16)); } }
-                #frame, #fallbackPlaceholder, iframe { position: absolute; width: 100%; height: 100%; left: 0; }
+                #frame, #placeholder, iframe { position: absolute; width: 100%; height: 100%; left: 0; }
                 #frame { cursor: pointer; }
-                #fallbackPlaceholder { object-fit: cover; }
+                #placeholder { object-fit: cover; }
                 #frame::before { content: ''; display: block; position: absolute; top: 0; background-image: linear-gradient(180deg, #111 -20%, transparent 90%); height: 60px; width: 100%; z-index: 1; }
                 #playButton { width: 68px; height: 48px; background-color: transparent; background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 68 48"><path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55c-2.93.78-4.63 3.26-5.42 6.19C.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="red"/><path d="M45 24 27 14v20" fill="white"/></svg>'); z-index: 1; border: 0; border-radius: inherit; }
                 #playButton:before { content: ''; border-style: solid; border-width: 11px 0 11px 19px; border-color: transparent transparent transparent #fff; }
@@ -64,21 +64,13 @@ export class LiteYTEmbed extends HTMLElement {
                 #frame.activated::before, #frame.activated > #playButton { display: none; }
             </style>
             <div id="frame">
-                <picture>
-                    <source id="webpPlaceholder" type="image/webp">
-                    <source id="jpegPlaceholder" type="image/jpeg">
-                    <img id="fallbackPlaceholder" referrerpolicy="origin" loading="lazy">
-                </picture>
+                <img id="placeholder" referrerpolicy="origin" loading="lazy">
                 <button id="playButton"></button>
             </div>
         `;
 
         this.domRefFrame = shadowDom.querySelector('#frame');
-        this.domRefImg = {
-            fallback: shadowDom.querySelector('#fallbackPlaceholder'),
-            webp: shadowDom.querySelector('#webpPlaceholder'),
-            jpeg: shadowDom.querySelector('#jpegPlaceholder'),
-        };
+        this.domRefImg = shadowDom.querySelector('#placeholder');
         this.domRefPlayButton = shadowDom.querySelector('#playButton');
     }
 
@@ -132,14 +124,12 @@ export class LiteYTEmbed extends HTMLElement {
     }
 
     initImagePlaceholder() {
-        const posterUrl = `https://i.ytimg.com/vi/${this.videoId}/${this.posterQuality}`;
-        this.domRefImg.fallback.loading = this.posterLoading;
-        this.domRefImg.webp.srcset = `${posterUrl}.webp`;
-        this.domRefImg.jpeg.srcset = `${posterUrl}.jpg`;
-        this.domRefImg.fallback.src = `${posterUrl}.jpg`;
+        const posterUrlWebp = `https://i3.ytimg.com/vi_webp/${this.videoId}/${this.posterQuality}.webp`;
+        this.domRefImg.loading = this.posterLoading;
+        this.domRefImg.src = posterUrlWebp;
         const altText = `${this.videoPlay}: ${this.videoTitle}`;
-        this.domRefImg.fallback.setAttribute('aria-label', altText);
-        this.domRefImg.fallback.setAttribute('alt', altText);
+        this.domRefImg.setAttribute('aria-label', altText);
+        this.domRefImg.setAttribute('alt', altText);
     }
 
     initIntersectionObserver() {
